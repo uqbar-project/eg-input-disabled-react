@@ -1,6 +1,7 @@
 import './App.css'
 
 import { Dropdown } from 'primereact/dropdown'
+import { InputNumber } from 'primereact/inputnumber'
 import { InputSwitch } from 'primereact/inputswitch'
 import { InputText } from 'primereact/inputtext'
 import React, { useState } from 'react'
@@ -35,26 +36,27 @@ const App = () => {
       <div className="field-group">
         <div className="etiqueta">Energía</div>
         <CustomInput value={pepita.energia} enabled={enabled}>
-          <InputText value={pepita.energia} onChange={(event) => actualizar('energia', event.target.value)}></InputText>
+          <InputNumber showButtons={true} value={pepita.energia} onChange={(event) => actualizar('energia', event.value)}></InputNumber>
         </CustomInput>
       </div>
       <div className="field-group">
         <div className="etiqueta">Nombre</div>
-        <CustomInput value={pepita.nombre} enabled={enabled}>
-          <InputText value={pepita.nombre} onChange={(event) => actualizar('nombre', event.target.value)}></InputText>
+        <CustomInput dataTestId="label-nombre" value={pepita.nombre} enabled={enabled}>
+          <InputText value={pepita.nombre} data-testid="input-nombre" onChange={(event) => actualizar('nombre', event.target.value)}></InputText>
         </CustomInput>
       </div>
       <div className="field-group">
-        <div className="etiqueta">Nombre</div>
+        <div className="etiqueta">Tipo de ave</div>
         <CustomInput value={pepita.tipoDeAve} enabled={enabled}>
           <Dropdown value={pepita.tipoDeAve} options={tiposDeAve.map((tipoDeAve) => tipoDeAve.nombre)} onChange={(event) => { actualizar('tipoDeAve', event.value) }} placeholder="Seleccione un tipo de ave" />
         </CustomInput>
       </div>
+      <hr />
       <div className="field-group">
         <div className="etiqueta">Habilitar edición</div>
-        <InputSwitch checked={enabled} onChange={(e) => setEnabled(e.value)} ></InputSwitch>
+        <InputSwitch data-testid="enable" checked={enabled} onChange={(e) => setEnabled(e.value)} ></InputSwitch>
       </div>
-    </div>
+    </div >
   )
 }
 
