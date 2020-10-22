@@ -41,7 +41,7 @@ const App = () => {
       </div>
       <div className="field-group">
         <div className="etiqueta">Nombre</div>
-        <CustomInput dataTestId="label-nombre" value={pepita.nombre} enabled={enabled}>
+        <CustomInput value={pepita.nombre} enabled={enabled}>
           <InputText value={pepita.nombre} data-testid="input-nombre" onChange={(event) => actualizar('nombre', event.target.value)}></InputText>
         </CustomInput>
       </div>

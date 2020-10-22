@@ -9,9 +9,9 @@ test('inicialmente aparece habilitado el formulario', () => {
 })
 
 test('al presionar el botón para deshabilitar el formulario queda readonly', () => {
-  const { getByTestId, queryByTestId } = render(<App />)
+  const { getByTestId, getByText, queryByTestId } = render(<App />)
   fireEvent.click(getByTestId('enable'))
   expect(queryByTestId('input-nombre')).toBeNull()
-  expect(getByTestId('label-nombre')).toBeInTheDocument()
+  expect(getByText(/pepita/i)).toBeInTheDocument()
 })
 
