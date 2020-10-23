@@ -1,8 +1,8 @@
 import React from 'react'
 
-export const CustomInput = ({ enabled, value, dataTestId, children }) => {
+export const CustomInput = ({ enabled, value, children }) => {
   if (!enabled) {
-    return <span data-testid={dataTestId} className="disabled">{value}</span>
+    return <span className="disabled">{value}</span>
   }
   return children
 }
