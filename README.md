@@ -136,3 +136,7 @@ test('al presionar el botón para deshabilitar el formulario queda readonly', ()
   expect(getByText(/pepita/i)).toBeInTheDocument()
 })
 ```
+
+## Material relacionado
+
+- [Composición vs. herencia](https://es.reactjs.org/docs/composition-vs-inheritance.html)
