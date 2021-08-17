@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/uqbar-project/eg-input-disabled-react.svg?branch=master)](https://travis-ci.com/uqbar-project/eg-input-disabled-react)
+[![Build React App](https://github.com/uqbar-project/eg-input-disabled-react/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/uqbar-project/eg-input-disabled-react/actions/workflows/build.yml) ![coverage](./badges/coverage/coverage.svg)
 
 ## Ejemplo input disabled o cómo anidar componentes
 
