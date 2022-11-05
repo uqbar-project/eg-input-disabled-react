@@ -118,22 +118,31 @@ ahora los cambios no son reactivos: React no es capaz de detectar que hubo un ca
 
 ## Testeo
 
-Proveemos dos funciones de testeo para CustomInput:
+Proveemos tres funciones de testeo para CustomInput:
 
-- el escenario en el que un control está habilitado
+- el escenario inicial en el que un control está habilitado
+- además si está habilitado podemos modificar el valor
 - y el escenario en el que el control está deshabilitado
 
 ```js
 test('inicialmente aparece habilitado el formulario', () => {
-  const { getByTestId } = render(<App />)
-  expect(getByTestId('input-nombre')).toBeInTheDocument()
+  render(<App />)
+  expect(screen.getByTestId('input-nombre')).toBeInTheDocument()
+})
+
+test('si está habilitado podemos cambiar el valor de una referencia', async () => {
+  render(<App />)
+  const inputNombre = screen.getByTestId('input-nombre')
+  expect(inputNombre.value).toBe('Pepita')
+  await userEvent.type(inputNombre, '{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}restaurant')
+  expect(screen.getByTestId('input-nombre').value).toBe('restaurant')
 })
 
 test('al presionar el botón para deshabilitar el formulario queda readonly', () => {
-  const { getByTestId, getByText, queryByTestId } = render(<App />)
-  fireEvent.click(getByTestId('enable'))
-  expect(queryByTestId('input-nombre')).toBeNull()
-  expect(getByText(/pepita/i)).toBeInTheDocument()
+  render(<App />)
+  fireEvent.click(screen.getByTestId('enable'))
+  expect(screen.queryByTestId('input-nombre')).toBeNull()
+  expect(screen.getByText(/pepita/i)).toBeInTheDocument()
 })
 ```
 
