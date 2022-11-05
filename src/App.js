@@ -35,19 +35,19 @@ const App = () => {
       <h2>Carga de datos</h2>
       <div className="field-group">
         <div className="etiqueta">Energía</div>
-        <CustomInput value={pepita.energia} enabled={enabled}>
+        <CustomInput enabled={enabled}>
           <InputNumber showButtons={true} value={pepita.energia} onChange={(event) => actualizar('energia', event.value)}></InputNumber>
         </CustomInput>
       </div>
       <div className="field-group">
         <div className="etiqueta">Nombre</div>
-        <CustomInput value={pepita.nombre} enabled={enabled}>
+        <CustomInput enabled={enabled}>
           <InputText value={pepita.nombre} data-testid="input-nombre" onChange={(event) => actualizar('nombre', event.target.value)}></InputText>
         </CustomInput>
       </div>
       <div className="field-group">
         <div className="etiqueta">Tipo de ave</div>
-        <CustomInput value={pepita.tipoDeAve} enabled={enabled}>
+        <CustomInput enabled={enabled}>
           <Dropdown value={pepita.tipoDeAve} options={tiposDeAve.map((tipoDeAve) => tipoDeAve.nombre)} onChange={(event) => { actualizar('tipoDeAve', event.value) }} placeholder="Seleccione un tipo de ave" />
         </CustomInput>
       </div>

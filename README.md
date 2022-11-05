@@ -26,18 +26,23 @@ Para eso podemos aprovechar la props `children`, donde React inyecta automática
 ```js
 export const CustomInput = ({ enabled, value, children }) => {
   if (!enabled) {
-    return <span className="disabled">{value}</span>
+    return <span className="disabled">{value ?? children.props.value}</span>
   }
   return children
 }
 ```
+
+Incluso podemos ver que
+
+- podemos recibir el valor a mostrar en caso de estar deshabilitado (`value`)
+- o bien el hijo puede recibir en sus `props` el valor (para el input text, el number y el dropdown esto es así)
 
 ## Uso del CustomInput
 
 En nuestro componente principal, podemos ver cómo utilizamos CustomInput con el nombre del ave:
 
 ```js
-  <CustomInput value={pepita.nombre} enabled={enabled}>
+  <CustomInput enabled={enabled}>
     <InputText value={pepita.nombre} data-testid="input-nombre" onChange={(event) => actualizar('nombre', event.target.value)}></InputText>
   </CustomInput>
 ```
@@ -45,7 +50,7 @@ En nuestro componente principal, podemos ver cómo utilizamos CustomInput con el
 o bien con el dropdown que elige el tipo de ave:
 
 ```js
-  <CustomInput value={pepita.tipoDeAve} enabled={enabled}>
+  <CustomInput enabled={enabled}>
     <Dropdown value={pepita.tipoDeAve} options={tiposDeAve.map((tipoDeAve) => tipoDeAve.nombre)} onChange={(event) => { actualizar('tipoDeAve', event.value) }} placeholder="Seleccione un tipo de ave" />
   </CustomInput>
 ```
