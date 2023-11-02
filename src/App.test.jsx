@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import React from 'react'
+import { expect, test } from 'vitest'
 
 import App from './App'
 
@@ -9,9 +9,9 @@ test('inicialmente aparece habilitado el formulario', () => {
   expect(screen.getByTestId('input-nombre')).toBeInTheDocument()
 })
 
-test('al presionar el botón para deshabilitar el formulario queda readonly', () => {
+test('al presionar el botón para deshabilitar el formulario queda readonly', async () => {
   render(<App />)
-  fireEvent.click(screen.getByTestId('enable'))
+  await fireEvent.click(screen.getByRole('switch'))
   expect(screen.queryByTestId('input-nombre')).toBeNull()
   expect(screen.getByText(/pepita/i)).toBeInTheDocument()
 })

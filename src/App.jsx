@@ -4,7 +4,7 @@ import { Dropdown } from 'primereact/dropdown'
 import { InputNumber } from 'primereact/inputnumber'
 import { InputSwitch } from 'primereact/inputswitch'
 import { InputText } from 'primereact/inputtext'
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 import { CustomInput } from './CustomInput'
 
