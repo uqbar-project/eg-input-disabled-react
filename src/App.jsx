@@ -4,9 +4,8 @@ import { Dropdown } from 'primereact/dropdown'
 import { InputNumber } from 'primereact/inputnumber'
 import { InputSwitch } from 'primereact/inputswitch'
 import { InputText } from 'primereact/inputtext'
+import { CustomInput } from './components/CustomInput'
 import { useState } from 'react'
-
-import { CustomInput } from './CustomInput'
 
 const tiposDeAve = [
   { nombre: 'Golondrina Tijerita' },
