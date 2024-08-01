@@ -4,9 +4,5 @@ type CustomInputPayload = {
   value?: unknown;
 }
 
-export const CustomInput = ({ enabled, children, value }: CustomInputPayload) => {
-  if (!enabled) {
-    return <span className="disabled">{value ?? children?.props.value}</span>
-  }
-  return children
-}
+export const CustomInput = ({ enabled, children, value }: CustomInputPayload) =>
+  enabled ? children : <span className="disabled">{value ?? children?.props.value}</span>

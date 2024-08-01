@@ -1,11 +1,10 @@
-[![Build React App](https://github.com/uqbar-project/eg-input-disabled-react/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/uqbar-project/eg-input-disabled-react/actions/workflows/build.yml) ![coverage](./badges/coverage/coverage.svg)
+[![Build React App](https://github.com/uqbar-project/eg-input-disabled-react/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/uqbar-project/eg-input-disabled-react/actions/workflows/build.yml) [![codecov](https://codecov.io/gh/uqbar-project/eg-input-disabled-react/graph/badge.svg?token=G1ARU989A1)](https://codecov.io/gh/uqbar-project/eg-input-disabled-react)
 
 ## Ejemplo input disabled o cómo anidar componentes
 
 En este ejemplo queremos mostrar cómo diseñar un componente React que pueda trabajar con componentes hijos dinámicos.
 
 ![demo](./video/demo.gif)
-
 
 ## Definición del CustomInput
 
@@ -23,13 +22,9 @@ La función hace un renderizado condicional del elemento. El único detalle es q
 
 Para eso podemos aprovechar la props `children`, donde React inyecta automáticamente los hijos del componente actual. `children` referencia a una expresión JSX, por lo tanto, el `CustomInput` puede recibir y devolver esa props como parte de su definición:
 
-```js
-export const CustomInput = ({ enabled, value, children }) => {
-  if (!enabled) {
-    return <span className="disabled">{value ?? children.props.value}</span>
-  }
-  return children
-}
+```ts
+export const CustomInput = ({ enabled, children, value }: CustomInputPayload) =>
+  enabled ? children : <span className="disabled">{value ?? children?.props.value}</span>
 ```
 
 Incluso podemos ver que
@@ -41,68 +36,75 @@ Incluso podemos ver que
 
 En nuestro componente principal, podemos ver cómo utilizamos CustomInput con el nombre del ave:
 
-```js
-  <CustomInput enabled={enabled}>
-    <InputText value={pepita.nombre} data-testid="input-nombre" onChange={(event) => actualizar('nombre', event.target.value)}></InputText>
-  </CustomInput>
+```tsx
+<CustomInput enabled={enabled}>
+  <input type="number" value={pepita.energia} onChange={(event) => actualizar('energia', event.target.value)}></input>
+</CustomInput>
 ```
 
 o bien con el dropdown que elige el tipo de ave:
 
-```js
-  <CustomInput enabled={enabled}>
-    <Dropdown value={pepita.tipoDeAve} options={tiposDeAve.map((tipoDeAve) => tipoDeAve.nombre)} onChange={(event) => { actualizar('tipoDeAve', event.value) }} placeholder="Seleccione un tipo de ave" />
-  </CustomInput>
+```tsx
+<CustomInput enabled={enabled}>
+  <select value={pepita.tipoDeAve} onChange={(event) => { actualizar('tipoDeAve', event.target.value) }}>
+    <option value="">Seleccione un tipo de ave</option>
+    { tiposDeAve.map((tipoDeAve) => <option value={tipoDeAve.nombre}>{tipoDeAve.nombre}</option>) }
+  </select> 
+</CustomInput>
 ```
 
 Pasamos como `props.children` un `InputText`, un `Dropdown` de primefaces o cualquier otro componente React que necesitemos. El flag `enabled` forma parte del estado de nuestro componente App, y se asocia con el `InputSwitch` que está al final del formulario:
 
-```js
+```tsx
 const App = () => {
   
   const [enabled, setEnabled] = useState(true)
 
   return (
     ...
-      <InputSwitch data-testid="enable" checked={enabled} onChange={(e) => setEnabled(e.value)} ></InputSwitch>
+    <input data-testid="input-enabled" type="checkbox" checked={enabled} onChange={() => setEnabled(!enabled)}/>
 ```
 
 ## Actualización del objeto en el formulario
 
 Un detalle adicional es que definimos una sola función para actualizar a pepita:
 
-```js
-const actualizar = (referencia, valor) => {
-  pepita[referencia] = valor
-  setPepita({ ...pepita })
+```ts
+const actualizar = (referencia: keyof typeof pepita, valor: unknown) => {
+  setPepita({
+    ...pepita,
+    [referencia]: valor
+  })
 }
 ```
 
 En cada control solo necesitamos pasar:
 
-- cuál es el atributo que queremos modificar
-- cuál es el valor nuevo
+- cuál es el atributo que queremos modificar, por eso el tipo es `keyof` del objeto pepita
+- cuál es el valor nuevo: utilizamos el tipo `unknown` dado que podemos trabajar con numbers o strings, pero no nos interesa enviarle mensajes. Podríamos usar `any` pero eso deshabilita el chequeo de tipos que trae Typescript. Para más información podés ver [este artículo](https://dmitripavlutin.com/typescript-unknown-vs-any/).
 
 El control que modifica la energia define el onChange de la siguiente manera:
 
-```js
-<InputNumber showButtons={true} value={pepita.energia} onChange={(event) => actualizar('energia', event.value)}></InputNumber>
+```tsx
+<input type="text" ... onChange={(event) => actualizar('nombre', event.target.value)}></input>
 ```
 
 El Dropdown lo hace de manera similar:
 
-```js
-<... onChange={(event) => { actualizar('tipoDeAve', event.value) }} ...>
+```tsx
+<select ... onChange={(event) => { actualizar('tipoDeAve', event.target.value) }}>
 ```
 
 ## Forzando el render de los cambios
 
 Repasemos una vez más este código:
 
-```js
-const actualizar = (referencia, valor) => {
-  pepita[referencia] = valor
-  setPepita({ ...pepita })
+```ts
+const actualizar = (referencia: keyof typeof pepita, valor: unknown) => {
+  setPepita({
+    ...pepita,
+    [referencia]: valor
+  })
 }
 ```
 
@@ -110,8 +112,8 @@ Lo que nosotros hacemos es: 1) pisar el valor en la referencia, 2) actualizar el
 
 Si nosotros modificamos la definición de la función actualizar:
 
-```js
-const actualizar = (referencia, valor) => {
+```ts
+const actualizar = (referencia: keyof typeof pepita, valor: unknown) => {
   pepita[referencia] = valor
   setPepita(pepita)
 }
@@ -128,29 +130,3 @@ Proveemos tres funciones de testeo para CustomInput:
 - el escenario inicial en el que un control está habilitado
 - además si está habilitado podemos modificar el valor
 - y el escenario en el que el control está deshabilitado
-
-```js
-test('inicialmente aparece habilitado el formulario', () => {
-  render(<App />)
-  expect(screen.getByTestId('input-nombre')).toBeInTheDocument()
-})
-
-test('al presionar el botón para deshabilitar el formulario queda readonly', async () => {
-  render(<App />)
-  await fireEvent.click(screen.getByRole('switch'))
-  expect(screen.queryByTestId('input-nombre')).toBeNull()
-  expect(screen.getByText(/pepita/i)).toBeInTheDocument()
-})
-
-test('si está habilitado podemos cambiar el valor de una referencia', async () => {
-  render(<App />)
-  const inputNombre = screen.getByTestId('input-nombre')
-  expect(inputNombre.value).toBe('Pepita')
-  await userEvent.type(inputNombre, '{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}restaurant')
-  expect(screen.getByTestId('input-nombre').value).toBe('restaurant')
-})
-```
-
-## Material relacionado
-
-- [Composición vs. herencia](https://es.reactjs.org/docs/composition-vs-inheritance.html)

@@ -4,10 +4,10 @@ import { useState } from 'react'
 import { CustomInput } from './components/CustomInput'
 
 const tiposDeAve = [
+  { nombre: 'Albatros Errante' },
+  { nombre: 'Benteveo' },
   { nombre: 'Golondrina Tijerita' },
   { nombre: 'Petrel' },
-  { nombre: 'Benteveo' },
-  { nombre: 'Albatros Errante' },
 ]
 
 const pepitaInicial = {
