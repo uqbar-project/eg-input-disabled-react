@@ -49,7 +49,7 @@ const App = () => {
         <CustomInput enabled={enabled}>
           <select value={pepita.tipoDeAve} onChange={(event) => { actualizar('tipoDeAve', event.target.value) }}>
             <option value="">Seleccione un tipo de ave</option>
-            { tiposDeAve.map((tipoDeAve) => <option value={tipoDeAve.nombre}>{tipoDeAve.nombre}</option>) }
+            { tiposDeAve.map((tipoDeAve) => <option key={tipoDeAve.nombre} value={tipoDeAve.nombre}>{tipoDeAve.nombre}</option>) }
           </select> 
         </CustomInput>
       </div>

@@ -1,6 +1,6 @@
 .App {
   margin: 1rem;
-  width: calc(100% - 2rem);
+  width: 100vw;
 }
 
 .field-group {
