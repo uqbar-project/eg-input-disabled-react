@@ -23,8 +23,18 @@ La función hace un renderizado condicional del elemento. El único detalle es q
 Para eso podemos aprovechar la props `children`, donde React inyecta automáticamente los hijos del componente actual. `children` referencia a una expresión JSX/TSX, por lo tanto, el `CustomInput` puede recibir y devolver esa prop como parte de su definición:
 
 ```ts
-export const CustomInput = ({ enabled, children, value }: CustomInputPayload) =>
-  enabled ? children : <span className="disabled">{value ?? children?.props.value}</span>
+export const CustomInput = ({
+  enabled,
+  children,
+  value,
+}: CustomInputPayload) =>
+  enabled ? (
+    children
+  ) : (
+    <span className="disabled">
+      {(value ?? children?.props.value) as ReactNode}
+    </span>
+  )
 ```
 
 Incluso
@@ -38,7 +48,12 @@ En nuestro componente principal, podemos ver cómo utilizamos CustomInput con el
 
 ```tsx
 <CustomInput enabled={enabled}>
-  <input type="text" value={pepita.nombre} data-testid="input-nombre" onChange={(event) => actualizar('nombre', event.target.value)}></input>
+  <input
+    type="text"
+    value={pepita.nombre}
+    data-testid="input-nombre"
+    onChange={(event) => actualizar('nombre', event.target.value)}
+  ></input>
 </CustomInput>
 ```
 
@@ -46,10 +61,19 @@ o bien con el dropdown que elige el tipo de ave:
 
 ```tsx
 <CustomInput enabled={enabled}>
-  <select value={pepita.tipoDeAve} onChange={(event) => { actualizar('tipoDeAve', event.target.value) }}>
+  <select
+    value={pepita.tipoDeAve}
+    onChange={(event) => {
+      actualizar('tipoDeAve', event.target.value)
+    }}
+  >
     <option value="">Seleccione un tipo de ave</option>
-    { tiposDeAve.map((tipoDeAve) => <option value={tipoDeAve.nombre}>{tipoDeAve.nombre}</option>) }
-  </select> 
+    {tiposDeAve.map((tipoDeAve) => (
+      <option key={tipoDeAve.nombre} value={tipoDeAve.nombre}>
+        {tipoDeAve.nombre}
+      </option>
+    ))}
+  </select>
 </CustomInput>
 ```
 
@@ -57,12 +81,16 @@ Pasamos como `props.children` un `input`, un `select`, componentes que pueden se
 
 ```tsx
 const App = () => {
-  
   const [enabled, setEnabled] = useState(true)
 
   return (
     ...
-    <input data-testid="input-enabled" type="checkbox" checked={enabled} onChange={() => setEnabled(!enabled)}/>
+    <input
+      data-testid="input-enabled"
+      type="checkbox"
+      checked={enabled}
+      onChange={() => setEnabled(!enabled)}
+    />
 ```
 
 ## Actualización del objeto en el formulario
@@ -73,7 +101,7 @@ Un detalle adicional es que definimos una sola función para actualizar a pepita
 const actualizar = (referencia: keyof typeof pepita, valor: unknown) => {
   setPepita({
     ...pepita,
-    [referencia]: valor
+    [referencia]: valor,
   })
 }
 ```
@@ -86,13 +114,22 @@ En cada control solo necesitamos pasar:
 El control que modifica la energia define el onChange de la siguiente manera:
 
 ```tsx
-<input type="text" ... onChange={(event) => actualizar('nombre', event.target.value)}></input>
+<input
+  type="text"
+  ...
+  onChange={(event) => actualizar('nombre', event.target.value)}
+></input>
 ```
 
 El que cambia el tipo de ave lo hace de manera similar:
 
 ```tsx
-<select ... onChange={(event) => { actualizar('tipoDeAve', event.target.value) }}>
+<select
+  ...
+  onChange={(event) => {
+    actualizar('tipoDeAve', event.target.value)
+  }}
+>
 ```
 
 ## Forzando el render de los cambios
@@ -103,7 +140,7 @@ Repasemos una vez más este código:
 const actualizar = (referencia: keyof typeof pepita, valor: unknown) => {
   setPepita({
     ...pepita,
-    [referencia]: valor
+    [referencia]: valor,
   })
 }
 ```
