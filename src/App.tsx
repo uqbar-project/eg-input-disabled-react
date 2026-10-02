@@ -39,7 +39,7 @@ const App = () => {
             type="number"
             value={pepita.energia}
             onChange={(event) => actualizar('energia', event.target.value)}
-          ></input>
+          />
         </CustomInput>
       </div>
       <div className="field-group">
@@ -50,7 +50,7 @@ const App = () => {
             value={pepita.nombre}
             data-testid="input-nombre"
             onChange={(event) => actualizar('nombre', event.target.value)}
-          ></input>
+          />
         </CustomInput>
       </div>
       <div className="field-group">
@@ -80,7 +80,7 @@ const App = () => {
             checked={enabled}
             onChange={() => setEnabled(!enabled)}
           />
-          <span className="slider round"></span>
+          <span className="slider round" />
         </label>
       </div>
     </div>
